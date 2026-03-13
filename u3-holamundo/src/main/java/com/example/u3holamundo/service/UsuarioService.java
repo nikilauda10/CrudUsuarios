@@ -1,5 +1,6 @@
 package com.example.u3holamundo.service;
 
+import com.example.u3holamundo.controller.dto.CreateUserDto;
 import com.example.u3holamundo.model.Usuario;
 import com.example.u3holamundo.repository.UsuarioRepository;
 
@@ -15,14 +16,19 @@ public class UsuarioService {
     @Autowired
     private UsuarioRepository usuarioRepository;
 
-    public Usuario guardarUsuario(Usuario unUsuario){
-      Usuario usuarioExistente = usuarioRepository.findOneByEmail(unUsuario.getEmail());
+    public Usuario guardarUsuario(CreateUserDto unDto){
+      Usuario usuarioExistente = usuarioRepository.findOneByEmail(unDto.getCorreo());
       if (usuarioExistente != null){
           throw new RuntimeException("El mail ya esta registrado");
       }
-      Usuario usuarioGuardado = usuarioRepository.save(unUsuario);
+      Usuario unusuario = new Usuario();
+      unusuario.setNombre(unDto.getNombre());
+      unusuario.setApellido(unDto.getApellido());
+      unusuario.setEmail(unDto.getCorreo());
+      Usuario usuarioGuardado = usuarioRepository.save(unusuario);
       return usuarioGuardado;
     }
+
 
     //Aqui tenemos que elegir la de spring no la de jakarta.
     @Transactional(readOnly = true)
